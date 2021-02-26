@@ -1,0 +1,37 @@
+C = 5
+p = [0, 2, 3, 2, 1, 4] # p[0] = 0 to 1-initialize
+
+# Recursive (exponential in len(p) worst-case)
+def N(C, i):
+    if C == 0:
+        return 1
+    elif C < 0 or i < 1:
+        return 0
+    else:
+        return N(C, i - 1) + N(C - p[i], i - 1)
+
+print(N(C, len(p) - 1)) # Account for p[0]
+
+"""
+RECURSION FORMULA
+         0                          c<0 or i<1
+         1                          c=0
+N(C,i) = N(C,i-1) + N(C-p_i,i-1)    otherwise
+"""
+
+# Again, 1-initialize
+memo = [[-1 for col in range(len(p))] for row in range(C + 1)]
+
+# Top-down memoization (polynomial in O(len(p)C) worst-case)
+def N_dp(C, i):
+    if C == 0:
+        return 1
+    elif C < 0 or i < 1:
+        return 0
+    elif memo[C][i] != -1: # Check memo if C, i > 0
+        return memo[C][i]
+    else:
+        memo[C][i] = N_dp(C, i - 1) + N_dp(C - p[i], i - 1)
+        return memo[C][i]
+
+print(N_dp(C, len(p) - 1)) # Account for p[0]
